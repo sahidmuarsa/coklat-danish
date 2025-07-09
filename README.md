@@ -1,2 +1,3 @@
 # coklat-danish
-Docker compose confiig
+This is my docker compose config
+Docker compose config
