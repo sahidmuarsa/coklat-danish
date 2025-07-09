@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  directus:
+    image: directus/directus:latest
+    ports:
+      - "8080:8055"
+    environment:
+      DATABASE_CLIENT: pg
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: directus
+      DATABASE_USER: directus
+      DATABASE_PASSWORD: password
+      PUBLIC_URL: http://localhost:8080
+      ADMIN_EMAIL: "admin@example.com"
+      ADMIN_PASSWORD: "d1r3ctu5"
+      CACHE_ENABLED: "true"
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+    volumes:
+      - directus-data:/directus/uploads
+
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: password
+      REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: directus
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: n8n
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+  n8n_storage:
+
+networks:
+  app-network:
+    driver: bridge
