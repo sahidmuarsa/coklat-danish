@@ -37,6 +37,13 @@ services:
       DB_POSTGRESDB_DATABASE: n8n
       DB_POSTGRESDB_USER: n8n
       DB_POSTGRESDB_PASSWORD: password
+      N8N_SECURE_COOKIE: false
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: true
+      N8N_LOG_LEVEL: debug
+      N8N_LOG_OUTPUT: console,file
+      N8N_LOG_FILE_MAXSIZE: 50
+      N8N_LOG_FILE_MAXCOUNT: 10
+      N8N_RUNNERS_ENABLED: true
       REDIS_HOST: redis
     depends_on:
       - postgres
